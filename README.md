@@ -1,8 +1,10 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
 
+If you want to clone this project and run it locally, you need to create 2 files that are inside .gitignore
 
+.env.development --> PGDATABASE=nc_news
+.env.test --> PGDATABASE=nc_news_test
 
 --- 
 
