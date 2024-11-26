@@ -23,19 +23,17 @@ describe("GET /api", () => {
       .get("/api")
       .expect(200)
       .then(({ body: { endpoints } }) => {
-        console.log(endpoints, "Response body")
         expect(endpoints).toEqual(endpointsJson);
       });
   });
 });
 
 describe("GET /api/topics", () => {
-  test.only("200: Responds with an array of topic objects", () => {
+  test("200: Responds with an array of topic objects", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then(({ body: { topics }}) => {
-        console.log(topics, "response body")
         expect(topics).toHaveLength(3);
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
@@ -46,14 +44,13 @@ describe("GET /api/topics", () => {
       });
   });
   
-  test.only("200: Accepts a slug query wich responds with only topics with that slug ", () => {
+  test("200: Accepts a slug query wich responds with only topics with that slug ", () => {
       const slugExample = 'mitch';
   
       return request(app)
         .get(`/api/topics?slug=${slugExample}`)
         .expect(200)
         .then(({ body: { topics }}) => {
-          console.log(topics, "response body");
           expect(topics).toHaveLength(1); 
           topics.forEach(({ slug }) => {
             expect(slug).toBe(slugExample);
@@ -61,16 +58,51 @@ describe("GET /api/topics", () => {
         });
     });
   
-  test.only("400: responds with an error message for an invalid slug", () => {
+  test("400: responds with an error message for an invalid slug", () => {
       return request(app)
       .get('/api/topics?slug=weather')
       .expect(400)
       .then(({ body }) => {
          const { msg } = body;
          expect(msg).toBe('bad request')
-      });
-      
+      });  
   })
-  
 });
-     
+
+describe("GET /api/articles/:article_id", () => {
+  test("200: responds with an article object when given a valid article_id", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String)
+        });
+      });
+  });
+  test("404: responds with an error message if the article_id does not exist", () => {
+    return request(app)
+      .get("/api/articles/200")
+      .expect(404)
+      .then(({ body}) => {
+        const { msg } = body;
+        expect(msg).toBe('article not found')
+        });
+      });
+  test("400: responds with an error message for invalid article_id", () => {
+    return request(app)
+    .get("/api/articles/abc") 
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('bad request');
+      });
+  })  
+  });
+
+      
