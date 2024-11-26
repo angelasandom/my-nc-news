@@ -5,7 +5,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const app = require("../app");
 const request = require("supertest");
-
+const jestSorted = require('jest-sorted');
 
 /* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
@@ -27,6 +27,7 @@ describe("GET /api", () => {
       });
   });
 });
+
 
 describe("GET /api/topics", () => {
   test("200: Responds with an array of topic objects", () => {
@@ -69,6 +70,7 @@ describe("GET /api/topics", () => {
   })
 });
 
+
 describe("GET /api/articles/:article_id", () => {
   test("200: responds with an article object when given a valid article_id", () => {
     return request(app)
@@ -103,6 +105,37 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.msg).toBe('bad request');
       });
   })  
+
+  describe("GET /api/articles", () => {
+    test("200: responds with an array of articles objects with the correct properties ", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body: { articles }}) => {
+          expect(articles).toHaveLength(13);
+          articles.forEach((article) => {
+            expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count:expect.any(String),
+            article_img_url: expect.any(String)
+          });
+        });
+      });
+    });
   });
 
-      
+  test("200: articles are sorted by date of created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
+});
+
+});

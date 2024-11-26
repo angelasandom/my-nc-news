@@ -1,4 +1,15 @@
 const { selectArticlesById } = require('../models/articles.models')
+const { selectArticles } = require('../models/articles.models')
+
+exports.getArticles = (req, res, next) => {
+    selectArticles()
+    .then((articles) => {
+        res.status(200).send({ articles })
+    })
+    .catch((err) => {
+        next(err); 
+    });
+}
 
 exports.getArticlesById = (req, res, next) => {
     const { article_id } = req.params;
@@ -9,10 +20,5 @@ exports.getArticlesById = (req, res, next) => {
     .then((article)=> {
         return res.status(200).send({ article });
     })
-    .catch((err) => {
-        if (err.status === 404) {
-        return res.status(404).send({ msg: 'article not found' });
-        }
-        next(err);  
-        });    
+    .catch(next);
     };
