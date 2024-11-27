@@ -26,5 +26,21 @@
         }
       ]
     }
+  },
+  "GET /api/articles/comments": {
+    "description": "serves an array of all comments",
+    "queries": ["article_id"],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 2,
+          "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          "votes": 14,
+          "author": "butter_bridge",
+          "article_id": "1",
+          "created_at": "1604113380000"
+        }
+      ]
+    }
   }
 }
