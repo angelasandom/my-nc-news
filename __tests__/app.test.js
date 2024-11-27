@@ -64,7 +64,7 @@ describe("GET /api/topics", () => {
       .expect(400)
       .then(({ body }) => {
          const { msg } = body;
-         expect(msg).toBe('bad request')
+         expect(msg).toBe('Bad request')
       });  
   })
 });
@@ -94,7 +94,7 @@ describe("GET /api/articles/:article_id", () => {
       .expect(404)
       .then(({ body}) => {
         const { msg } = body;
-        expect(msg).toBe('article not found')
+        expect(msg).toBe('Article not found')
         });
       });
   test("400: responds with an error message for invalid article_id", () => {
@@ -102,7 +102,7 @@ describe("GET /api/articles/:article_id", () => {
     .get("/api/articles/abc") 
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe('bad request');
+        expect(body.msg).toBe('Bad request');
       });
   })  
 
@@ -183,7 +183,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/200/comments")
       .expect(404)
       .then(({ body: { msg }}) => {
-        expect(msg).toBe('article not found')
+        expect(msg).toBe('Article not found')
     });
   });
 
@@ -192,7 +192,43 @@ describe("GET /api/articles/:article_id/comments", () => {
     .get("/api/articles/abc/comments") 
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe('bad request');
+        expect(body.msg).toBe('Bad request');
       });
   });  
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: responds with a newly created user object", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "Interesting article.",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual(
+          expect.objectContaining({
+            article_id: 2,
+            author: "butter_bridge",
+            body: "Interesting article.",
+            created_at: expect.any(String),
+            votes: 0,
+          })
+        );
+      });
+  });
+
+  test("400: responds with an error if required fields are missing", () => {
+    const incompleteRequirements = { username: "butter_bridge" }; 
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(incompleteRequirements)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required field");
+      });
+  });
+  
 });

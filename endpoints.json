@@ -28,8 +28,8 @@
     }
   },
   "GET /api/articles/comments": {
-    "description": "serves an array of all comments",
-    "queries": ["article_id"],
+    "description": "serves an array of all comments sorted by date of created_at in descending order",
+    "queries": [],
     "exampleResponse": {
       "comments": [
         {
