@@ -8,10 +8,6 @@ const { getCommentsByArticlesId, postComment } = require("./controllers/comments
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('app');
-});
-
 app.get("/api", getApi);
 
 app.get("/api/topics", getTopics);
