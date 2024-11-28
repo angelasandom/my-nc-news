@@ -65,9 +65,19 @@ describe("GET /api/topics", () => {
       .then(({ body }) => {
          const { msg } = body;
          expect(msg).toBe('Bad request')
-      });  
+      });
+    });
+  test("404: responds with an error message for an endpoint that doesn't exist", () => {
+       return request(app)
+        .get('/api/nonexistent-endpoint')
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+           expect(msg).toBe('Endpoint not found');
+        });
+    });      
   })
-});
+
 
 
 describe("GET /api/articles/:article_id", () => {

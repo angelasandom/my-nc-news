@@ -1,11 +1,17 @@
 # Northcoders News API
 
 
-If you want to clone this project and run it locally, you need to create 2 files that are inside .gitignore
+If you want to clone this project and run it locally, you need Node.js.
 
-.env.development --> PGDATABASE=nc_news
-.env.test --> PGDATABASE=nc_news_test
+Install all nmp packages: npm install
+
+You need to create 2 files:
+
+.env.development --> PGDATABASE=<"database_name">
+
+.env.test --> PGDATABASE=<"database_name_test"
+
+You can find the database name in the setup.sql file.
 
 --- 
 
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
