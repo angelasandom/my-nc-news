@@ -229,6 +229,43 @@ describe("POST /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Missing required field");
       });
-  });
-  
+  }); 
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: updates an article's votes and responds with the updated article", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({ inc_votes: 10 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 2,
+            votes: expect.any(Number), 
+          })
+        );
+      });
+  });
+
+  test("400: responds with an error if required fields are missing", () => { 
+     return request(app)
+        .patch("/api/articles/2")
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Missing required field");
+          
+      });
+     });
+
+  test("404: responds with an error message if the article_id does not exist", () => {
+      return request(app)
+        .patch("/api/articles/200")
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body: { msg }}) => {
+          expect(msg).toBe('Article not found')
+      });
+    });
+  });
