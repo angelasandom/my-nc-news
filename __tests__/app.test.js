@@ -67,15 +67,16 @@ describe("GET /api/topics", () => {
          expect(msg).toBe('Bad request')
       });
     });
+
   test("404: responds with an error message for an endpoint that doesn't exist", () => {
        return request(app)
-        .get('/api/nonexistent-endpoint')
+        .get('/api/abc')
         .expect(404)
         .then(({ body }) => {
           const { msg } = body;
            expect(msg).toBe('Endpoint not found');
         });
-    });      
+    }); 
   })
 
 
@@ -107,6 +108,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(msg).toBe('Article not found')
         });
       });
+
   test("400: responds with an error message for invalid article_id", () => {
     return request(app)
     .get("/api/articles/abc") 
@@ -147,6 +149,24 @@ describe("GET /api/articles/:article_id", () => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
 });
+  test("400: responds with an error for an invalid sort_by input", () => {
+    return request(app)
+    .get("/api/articles?sort_by=abc")
+    .expect(400)
+    .then(({ body }) => {
+       const { msg } = body;
+       expect(msg).toBe('Bad request')
+  });
+}); 
+  test("400: responds with an error for an invalid order input", () => {
+    return request(app)
+    .get("/api/articles?order=abc")
+    .expect(400)
+    .then(({ body }) => {
+       const { msg } = body;
+       expect(msg).toBe('Bad request')
+  });
+});   
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
@@ -259,14 +279,13 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 
   test("400: responds with an error if required fields are missing", () => { 
-     return request(app)
-        .patch("/api/articles/2")
-        .send({})
-        .expect(400)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Missing required field");
-          
-      });
+    return request(app)
+    .patch("/api/articles/2")
+    .send({})  
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Missing required field"); 
+    });
      });
 
   test("404: responds with an error message if the article_id does not exist", () => {
