@@ -1,21 +1,23 @@
 const { selectArticlesById, selectArticles, updateArticlesVotes } = require('../models/articles.models')
 
 exports.getArticles = (req, res, next) => {
-    const { sort_by, order } = req.query;
+    const { sort_by, order, topic } = req.query;
 
     if (order && order !== 'asc' && order !== 'desc') {
         return res.status(400).send({ msg: "Bad request" });
       }
     
-    selectArticles(sort_by, order)
-    
+    selectArticles(sort_by, order, topic)
     .then((articles) => {
-        res.status(200).send({ articles })
+    if (articles.length === 0 && topic) {
+          return res.status(404).send({ msg: "Topic not found" });
+     }
+       res.status(200).send({ articles });
     })
     .catch((err) => {
-        next(err); 
+    next(err);
     });
-}
+};
 
 exports.getArticlesById = (req, res, next) => {
     const { article_id } = req.params;
