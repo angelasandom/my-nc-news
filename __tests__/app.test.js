@@ -166,7 +166,55 @@ describe("GET /api/articles/:article_id", () => {
        const { msg } = body;
        expect(msg).toBe('Bad request')
   });
-});   
+}); 
+
+test("200: filters articles by a valid topic", () => {
+  return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.articles).toHaveLength(12); 
+      body.articles.forEach((article) => {
+        expect(article.topic).toBe("mitch");
+      });
+    });
+});
+
+test("404: responds with an error if topic does not exist", () => {
+  return request(app)
+    .get("/api/articles?topic=food")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Topic not found");
+    });
+});
+
+test("200: responds with all articles if no topic is provided", () => {
+  return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body }) => {
+      expect(body.articles).toHaveLength(13);
+    });
+});
+
+test("400: responds with an error if sort_by is invalid", () => {
+  return request(app)
+    .get("/api/articles?sort_by=abc")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request");
+    });
+});
+
+test("400: responds with an error if order query is invalid", () => {
+  return request(app)
+    .get("/api/articles?order=disorder")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request");
+    });
+});  
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
@@ -224,7 +272,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.msg).toBe('Bad request');
       });
-  });  
+  });
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
