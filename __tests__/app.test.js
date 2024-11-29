@@ -214,7 +214,19 @@ test("400: responds with an error if order query is invalid", () => {
     .then(({ body }) => {
       expect(body.msg).toBe("Bad request");
     });
-});  
+}); 
+
+test("200: responds with an article object including a comment_count", () => {
+  return request(app)
+    .get("/api/articles/9")
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body;
+      expect(article).toHaveProperty("comment_count", expect.any(Number));
+      expect(article.comment_count).toBe(2);
+    });
+});
+
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
