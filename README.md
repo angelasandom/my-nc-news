@@ -3,13 +3,13 @@ My NC News API
 Welcome!
 This project is an API that provides access to news articles, comments and topics. You can filter, sort, and interact with the data dynamically.
 
-Features
+Features:
 Retrieve articles, topics and comments.
 Sort and order articles using query parameters.
 Add comments to articles.
 Update article votes.
 
-Installation & Setup
+Installation & Setup:
 To run this project locally, ensure you have Node.js and PostgreSQL installed.
 
 1. Clone the Repository
