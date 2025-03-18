@@ -19,7 +19,7 @@ cd <repository_folder>
 2. Install Dependencies
 npm install
 
-3.Set Up Environment Variables
+3. Set Up Environment Variables
 Create two environment files in the root directory:
 .env.development
 PGDATABASE=<your_database_name>
